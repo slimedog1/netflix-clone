@@ -1,0 +1,75 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: rgb(15, 15, 15);
+}
+
+.main-container {
+    padding-top: 80px;
+}
+
+.navigation-bar {
+    max-height: 60px;
+    width: 100%;
+    display: flex;
+    margin-left: 20px;
+    margin-top: 15px;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.netflix-logo {
+    width: 150px;
+    height: auto;
+}
+
+.browse-elements {
+    display: flex;
+    align-items: center;
+}
+
+.misc-elements {
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+    margin-right: 40px;
+}
+
+.browse-button,
+.misc-button {
+    background: rgb(15, 15, 15);
+    color: gray;
+    margin-right: 18px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.category {
+    margin: 30px 20px;
+}
+
+.category-title {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 7px;
+}
+
+.movie-row {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+}
+
+.movie-row img {
+    width: 210px;
+    height: 140px;
+    object-fit: cover;
+}
