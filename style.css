@@ -5,6 +5,7 @@
 
 body {
     background: rgb(15, 15, 15);
+    font-family: 'Inter', sans-serif;
 }
 
 .main-container {
@@ -50,6 +51,9 @@ body {
     border: none;
     cursor: pointer;
     font-size: 15px;
+
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
 }
 
 .category {
@@ -58,18 +62,59 @@ body {
 
 .category-title {
     color: white;
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 7px;
+    font-weight: 600;
 }
 
 .movie-row {
     display: flex;
     gap: 7px;
-    overflow-x: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.movie-row::-webkit-scrollbar {
+    display: none;
 }
 
 .movie-row img {
     width: 210px;
     height: 140px;
     object-fit: cover;
+    flex-shrink: 0;
+}
+
+.left-button,
+.right-button {
+    background: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 50px;
+
+    position: absolute;
+    top: 0;
+    height: 100%;
+}
+
+.right-button:hover {
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
+}
+
+.left-button:hover {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
+}
+
+.left-button {
+    left: 0;
+}
+
+.right-button {
+    right: 0;
+}
+
+.movie-container {
+    position: relative;
 }

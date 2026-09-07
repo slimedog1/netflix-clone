@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netflix</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search,arrow_back_ios_new,arrow_forward_ios" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -35,18 +36,35 @@
 
         <div class="category"> 
             <h3 class="category-title">Trending Now</h3>
-                <div class="movie-row">
-                    <img src="assets/punisher-image.jpg">
-                    <img src="assets/punisher-image.jpg">
-                    <img src="assets/punisher-image.jpg">
-                    <img src="assets/punisher-image.jpg">
-                    <img src="assets/punisher-image.jpg">
-                    <img src="assets/punisher-image.jpg">
-                    <img src="assets/punisher-image.jpg">
-                </div>
+            <div class="movie-container">
+                <button class="left-button">
+                    <span class="material-symbols-outlined">
+                        arrow_back_ios_new
+                    </span>
+                </button>
+                    <div class="movie-row">
+                        <img src="assets/punisher-image.jpg">
+                        <img src="assets/punisher-image.jpg">
+                        <img src="assets/punisher-image.jpg">
+                        <img src="assets/punisher-image.jpg">
+                        <img src="assets/punisher-image.jpg">
+                        <img src="assets/punisher-image.jpg">
+                        <img src="assets/punisher-image.jpg">
+                        <img src="assets/punisher-image.jpg">
+                        <img src="assets/punisher-image.jpg">
+                        <img src="assets/punisher-image.jpg">
+                    </div>
+                <button class="right-button">
+                    <span class="material-symbols-outlined">
+                        arrow_forward_ios
+                    </span>
+                </button>
+            </div>
         </div>
 
     </main>
+
+    <script src="movieRow.js"></script>
     
 </body>
 </html>
