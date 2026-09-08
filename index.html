@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netflix</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search,arrow_back_ios_new,arrow_forward_ios" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search,arrow_back_ios_new,arrow_forward_ios,close,play_arrow" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -43,22 +43,43 @@
                     </span>
                 </button>
                     <div class="movie-row">
-                        <img src="assets/punisher-image.jpg">
-                        <img src="assets/punisher-image.jpg">
-                        <img src="assets/punisher-image.jpg">
-                        <img src="assets/punisher-image.jpg">
-                        <img src="assets/punisher-image.jpg">
-                        <img src="assets/punisher-image.jpg">
-                        <img src="assets/punisher-image.jpg">
-                        <img src="assets/punisher-image.jpg">
-                        <img src="assets/punisher-image.jpg">
-                        <img src="assets/punisher-image.jpg">
+                        
                     </div>
                 <button class="right-button">
                     <span class="material-symbols-outlined">
                         arrow_forward_ios
                     </span>
                 </button>
+            </div>
+        </div>
+
+        <div class="modal-overlay">
+            <div class="movie-modal">
+                <button class="close-modal">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </button>
+                <div class="image-container">
+                    <img class="modal-image" src="" alt="">
+                </div>
+                <div class="modal-content">
+                    <h3 class="modal-title"></h3>
+
+                    <div class="movie-info">
+                        <div class="movie-year"></div>
+                        <div class="movie-genre"></div>
+                        <div class="movie-rating"></div>
+                    </div>
+
+                    <p class="modal-description"></p>
+
+                    <button class="play-button">
+                        <span class="material-symbols-outlined">
+                            play_arrow
+                        </span>
+                    </button>
+                </div>
             </div>
         </div>
 
