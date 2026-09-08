@@ -6,7 +6,6 @@
 body {
     background: rgb(15, 15, 15);
     font-family: 'Inter', sans-serif;
-    margin: 20px;
 }
 
 .main-container {
@@ -30,6 +29,7 @@ body {
 .netflix-logo {
     width: 150px;
     height: auto;
+    margin-left: 14px;
 }
 
 .browse-elements {
@@ -79,6 +79,7 @@ body {
     font-size: 20px;
     margin-bottom: 7px;
     font-weight: 600;
+    margin: 15px 50px;
 }
 
 .movie-row {
@@ -87,6 +88,8 @@ body {
     overflow-x: hidden;
     scroll-behavior: smooth;
     scrollbar-width: none;
+    margin: 0 50px;
+    cursor: pointer;
 }
 
 .movie-row::-webkit-scrollbar {
@@ -94,10 +97,11 @@ body {
 }
 
 .movie-row img {
-    width: 210px;
-    height: 140px;
+    width: 240px;
+    height: 150px;
     object-fit: cover;
     flex-shrink: 0;
+    border-radius: 15px;
 }
 
 .movie-row img:hover {
@@ -117,12 +121,16 @@ body {
     height: 100%;
 }
 
-.right-button:hover {
-    background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
+.left-button span,
+.right-button span {
+    font-size: 30px;
+    font-weight: 100;
 }
 
+.right-button:hover,
 .left-button:hover {
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
+    transform: scale(1.4);
+    transition: transform 0.7s ease;
 }
 
 .left-button {
