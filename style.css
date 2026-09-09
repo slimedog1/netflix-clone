@@ -44,6 +44,59 @@ body {
     margin-right: 40px;
 }
 
+.search-container {
+    position: relative;
+    width: 45px;
+    transition: width 0.2s ease;
+    margin-left: auto;
+}
+
+.search-container.show {
+    width: 300px;
+    margin-right: 50px;
+}
+
+.search-container button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.search-container.show button {
+    left: 0;
+    right: auto;
+
+    background: transparent;
+    padding: 14px;
+    margin: 0;
+}
+
+.search-bar {
+    background: rgb(30, 30, 30);
+    border: 1px solid gray;
+    height: 50px;
+    width: 100%;
+    border-radius: 50px;
+    color: white;
+    padding-left: 50px;
+    font-size: medium;
+    font-weight: 100;
+    caret-color: white;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.search-bar.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.search-bar:focus {
+    outline: none;
+}
+
 .browse-button,
 .misc-button {
     background: rgb(15, 15, 15);
@@ -66,7 +119,7 @@ body {
 }
 
 .misc-button span {
-    font-size: 23px;
+    font-size: 28px;
     font-weight: 100;
 }
 
@@ -260,4 +313,5 @@ body {
 
 .close-modal span {
     font-weight: 100;
+    font-size: 30px;
 }

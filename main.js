@@ -11,6 +11,10 @@ const modalImage = document.querySelector('.modal-image')
 
 const closeModal = document.querySelector('.close-modal')
 
+const searchButton = document.querySelector('.search-container button')
+const searchBar = document.querySelector('.search-bar')
+const searchContainer = document.querySelector('.search-container')
+
 const movies = [
     {
         title: "The Punisher",
@@ -73,4 +77,14 @@ movies.forEach(movie => {
     movieRow.appendChild(image)
 })
 
+searchButton.addEventListener('click', () => {
+    searchBar.classList.add('show')
+    searchContainer.classList.add('show')
+})
 
+document.addEventListener('click', (event) => {
+    if (!searchContainer.contains(event.target)) {
+        searchBar.classList.remove('show');
+        searchContainer.classList.remove('show');
+    }
+})
