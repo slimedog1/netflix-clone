@@ -1,7 +1,3 @@
-const movieRow = document.querySelector('.movie-row')
-const leftButton = document.querySelector('.left-button')
-const rightButton = document.querySelector('.right-button')
-
 const modalOverlay = document.querySelector('.modal-overlay')
 const modalTitle = document.querySelector('.modal-title')
 const movieYear = document.querySelector('.movie-year')
@@ -14,6 +10,10 @@ const closeModal = document.querySelector('.close-modal')
 const searchButton = document.querySelector('.search-container button')
 const searchBar = document.querySelector('.search-bar')
 const searchContainer = document.querySelector('.search-container')
+
+const searchSuggestions = document.querySelector('.search-suggestions')
+
+const categoriesContainer = document.querySelector('.categories-container')
 
 const movies = [
     {
@@ -46,36 +46,24 @@ const movies = [
     }
 ]
 
-rightButton.addEventListener('click', () => {
-    movieRow.scrollLeft += 500
-})
-
-leftButton.addEventListener('click', () => {
-    movieRow.scrollLeft -= 500
-})
-
-movies.forEach(movie => {
-    const image = document.createElement('img')
-
-    image.src = movie.image
-    image.alt = movie.title
-
-    image.addEventListener('click', () => {
-        modalOverlay.classList.add('show')
-
-        modalTitle.textContent = movie.title
-        movieYear.textContent = movie.year
-        movieGenre.textContent = movie.genre
-        movieRating.textContent = movie.rating
-        modalImage.src = movie.image
-
-        closeModal.addEventListener('click', () => {
-            modalOverlay.classList.remove('show')
-        })
-    })
-
-    movieRow.appendChild(image)
-})
+const categories = [
+    {
+        name: "Trending Now",
+        movies: movies
+    },
+    {
+        name: "Popular on Netflix",
+        movies: movies
+    },
+    {
+        name: "Action",
+        movies: movies.filter(movie => movie.genre === "Action")
+    },
+    {
+        name: "Thriller",
+        movies: movies.filter(movie => movie.genre === "Thriller")
+    }
+]
 
 searchButton.addEventListener('click', () => {
     searchBar.classList.add('show')
@@ -86,5 +74,92 @@ document.addEventListener('click', (event) => {
     if (!searchContainer.contains(event.target)) {
         searchBar.classList.remove('show');
         searchContainer.classList.remove('show');
+
+        // searchBar.value = ''
+        searchSuggestions.innerHTML = ''
+        document.querySelector('.category').classList.remove('searching')
     }
 })
+
+searchBar.addEventListener('input', () => {
+    const searchTerm = searchBar.value.toLowerCase().trim()
+
+    searchSuggestions.innerHTML = ''
+
+    if (searchTerm === '') {
+        document.querySelector('.category').classList.remove('searching')
+        return
+    }
+
+    document.querySelector('.category').classList.add('searching')
+
+    const results = movies.filter(movie => movie.title.toLowerCase().includes(searchTerm))
+
+    results.forEach(movie => {
+        const suggestion = document.createElement('img')
+
+        suggestion.src = movie.image
+        suggestion.classList.add('search-result')
+
+        searchSuggestions.appendChild(suggestion)
+    })
+})
+
+categories.forEach(category => {
+    const categoryElement = document.createElement('div')
+    categoryElement.classList.add('category')
+
+    categoryElement.innerHTML = `
+            <h2 class="category-title">${category.name}</h2>
+            <div class="movie-container">
+                <button class="left-button">
+                    <span class="material-symbols-outlined">
+                        arrow_back_ios_new
+                    </span>
+                </button>
+                    <div class="movie-row">
+                        
+                    </div>
+                <button class="right-button">
+                    <span class="material-symbols-outlined">
+                        arrow_forward_ios
+                    </span>
+                </button>
+            </div>
+    `
+
+    const movieRow = categoryElement.querySelector('.movie-row')
+
+    category.movies.forEach(movie => {
+        const image = document.createElement('img')
+
+        image.src = movie.image
+        image.alt = movie.title
+
+        image.addEventListener('click', () => {
+            modalOverlay.classList.add('show')
+
+            modalTitle.textContent = movie.title
+            movieYear.textContent = movie.year
+            movieGenre.textContent = movie.genre
+            movieRating.textContent = movie.rating
+            modalImage.src = movie.image
+        })
+
+        movieRow.appendChild(image)
+    })
+
+    const leftButton = categoryElement.querySelector('.left-button')
+    const rightButton = categoryElement.querySelector('.right-button')
+
+    rightButton.addEventListener('click', () => {
+        movieRow.scrollLeft += 500
+    })
+
+    leftButton.addEventListener('click', () => {
+        movieRow.scrollLeft -= 500
+    })
+
+    categoriesContainer.appendChild(categoryElement)
+})
+

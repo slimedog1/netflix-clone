@@ -315,3 +315,36 @@ body {
     font-weight: 100;
     font-size: 30px;
 }
+
+.search-suggestions.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.search-suggestions {
+    position: fixed;
+    left: 0;
+    top: 200px;
+    padding-left: 80px;
+
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.search-suggestions img {
+    width: 230px;
+    height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.category.searching {
+    display: none;
+}
+
+.categories-container {}
