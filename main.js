@@ -15,59 +15,13 @@ const searchSuggestions = document.querySelector('.search-suggestions')
 
 const categoriesContainer = document.querySelector('.categories-container')
 
-const movies = [
-    {
-        title: "The Punisher",
-        image: "assets/punisher-image.jpg",
-        year: 2017,
-        genre: "Action",
-        rating: "16+"
-    },
-    {
-        title: "Breaking Bad",
-        image: "assets/breaking-bad.jpeg",
-        year: 2008,
-        genre: "Thriller",
-        rating: "16+"
-    },
-    {
-        title: "Stranger Things",
-        image: "assets/stranger-things.jpeg",
-        year: 2016,
-        genre: "Fantasy",
-        rating: "16+"
-    },
-    {
-        title: "Peaky Blinders",
-        image: "assets/peaky-blinders.jpeg",
-        year: 2015,
-        genre: "Action",
-        rating: "16+"
-    }
-]
-
-const categories = [
-    {
-        name: "Trending Now",
-        movies: movies
-    },
-    {
-        name: "Popular on Netflix",
-        movies: movies
-    },
-    {
-        name: "Action",
-        movies: movies.filter(movie => movie.genre === "Action")
-    },
-    {
-        name: "Thriller",
-        movies: movies.filter(movie => movie.genre === "Thriller")
-    }
-]
-
 searchButton.addEventListener('click', () => {
     searchBar.classList.add('show')
     searchContainer.classList.add('show')
+})
+
+closeModal.addEventListener('click', () => {
+    modalOverlay.classList.remove('show')
 })
 
 document.addEventListener('click', (event) => {
@@ -75,9 +29,8 @@ document.addEventListener('click', (event) => {
         searchBar.classList.remove('show');
         searchContainer.classList.remove('show');
 
-        // searchBar.value = ''
         searchSuggestions.innerHTML = ''
-        document.querySelector('.category').classList.remove('searching')
+        document.querySelector('.categories-container').classList.remove('searching')
     }
 })
 
@@ -87,11 +40,11 @@ searchBar.addEventListener('input', () => {
     searchSuggestions.innerHTML = ''
 
     if (searchTerm === '') {
-        document.querySelector('.category').classList.remove('searching')
+        document.querySelector('.categories-container').classList.remove('searching')
         return
     }
 
-    document.querySelector('.category').classList.add('searching')
+    document.querySelector('.categories-container').classList.add('searching')
 
     const results = movies.filter(movie => movie.title.toLowerCase().includes(searchTerm))
 
@@ -100,6 +53,10 @@ searchBar.addEventListener('input', () => {
 
         suggestion.src = movie.image
         suggestion.classList.add('search-result')
+
+        suggestion.addEventListener('click', () => {
+            openMovieModal(movie)
+        })
 
         searchSuggestions.appendChild(suggestion)
     })
@@ -137,13 +94,7 @@ categories.forEach(category => {
         image.alt = movie.title
 
         image.addEventListener('click', () => {
-            modalOverlay.classList.add('show')
-
-            modalTitle.textContent = movie.title
-            movieYear.textContent = movie.year
-            movieGenre.textContent = movie.genre
-            movieRating.textContent = movie.rating
-            modalImage.src = movie.image
+            openMovieModal(movie)
         })
 
         movieRow.appendChild(image)
@@ -162,4 +113,14 @@ categories.forEach(category => {
 
     categoriesContainer.appendChild(categoryElement)
 })
+
+function openMovieModal(movie) {
+    modalOverlay.classList.add('show')
+
+    modalTitle.textContent = movie.title
+    movieYear.textContent = movie.year
+    movieGenre.textContent = movie.genre
+    movieRating.textContent = movie.rating
+    modalImage.src = movie.image
+}
 

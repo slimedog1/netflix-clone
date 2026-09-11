@@ -13,17 +13,17 @@ body {
 }
 
 .navigation-bar {
-    max-height: 60px;
+    height: 80px;
     width: 100%;
     display: flex;
-    margin-left: 20px;
-    margin-top: 15px;
+    margin: 0;
     position: fixed;
     top: 0;
     left: 0;
 
     box-sizing: border-box;
     z-index: 100;
+    background: rgb(15, 15, 15);
 }
 
 .netflix-logo {
@@ -110,6 +110,7 @@ body {
 
     font-family: 'Inter', sans-serif;
     font-weight: 400;
+    text-decoration: none;
 }
 
 .browse-button:hover,
@@ -343,8 +344,80 @@ body {
     object-fit: cover;
 }
 
-.category.searching {
+.categories-container.searching {
     display: none;
 }
 
-.categories-container {}
+/* Movie and Series Page Styles */
+
+/* .browse-page .navigation-bar {
+    height: 160px;
+    top: 0;
+    left: 0;
+} */
+
+.ms-container {
+    height: 100px;
+    background: rgb(15, 15, 15);
+    position: fixed;
+
+    margin-top: 100px;
+    margin-left: 60px;
+}
+
+.ms-txt {
+    background: rgb(15, 15, 15);
+    color: white;
+    font-size: 40px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.browse-page .movie-row img {
+    width: 200px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.select-genre {
+    background: rgb(15, 15, 15);
+    width: 110px;
+    height: 25px;
+    border: 1px solid lightgray;
+    color: white;
+    position: relative;
+    margin-left: 40px;
+}
+
+.select-genre:focus {
+    outline: none;
+}
+
+.genre-txt {
+    position: absolute;
+    display: grid;
+}
+
+.browse-page .movie-row {
+    /* margin: 0 100px; */
+}
+
+/* .browse-page .main-container {
+    padding-top: 160px;
+}
+
+.browse-page .navigation-bar {
+    height: 160px;
+    width: 100%;
+    display: flex;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    box-sizing: border-box;
+    z-index: 100;
+    background: rgb(15, 15, 15);
+} */
