@@ -2,6 +2,11 @@ const apiKey = '7871cf68ddf81a6a551e611f28b927ee'
 const baseUrl = 'https://api.themoviedb.org/3'
 const imageBase = 'https://image.tmdb.org/t/p/w500'
 
+const params = new URLSearchParams(window.location.search)
+const pageType = params.get('type')
+
+document.getElementById('page-txt').textContent = pageType === 'movie' ? 'Movies' : 'Series'
+
 const modalOverlay = document.querySelector('.modal-overlay')
 const modalTitle = document.querySelector('.modal-title')
 const movieYear = document.querySelector('.movie-year')
@@ -9,70 +14,32 @@ const movieGenre = document.querySelector('.movie-genre')
 const movieRating = document.querySelector('.movie-rating')
 const modalImage = document.querySelector('.modal-image')
 const modalDescription = document.querySelector('.modal-description')
-
 const closeModal = document.querySelector('.close-modal')
-
+const categoriesContainer = document.querySelector('.categories-container')
 const searchButton = document.querySelector('.search-container button')
 const searchBar = document.querySelector('.search-bar')
 const searchContainer = document.querySelector('.search-container')
-
 const searchSuggestions = document.querySelector('.search-suggestions')
-
-const categoriesContainer = document.querySelector('.categories-container')
 
 let allItems = []
 let currentItem = null
 
-const trendingOptions = [
-    { name: 'Trending Today', endpoint: '/trending/all/day' },
-    { name: 'Trending This Week', endpoint: '/trending/all/week' },
-    { name: 'Trending Movies', endpoint: '/trending/movie/week' },
-    { name: 'Trending Series', endpoint: '/trending/tv/week' }
-]
-
-const moviesOptions = [
-    { name: 'Popular Movies', endpoint: '/movie/popular' },
-    { name: 'Top Rated Movies', endpoint: '/movie/top_rated' },
-    { name: 'Now Playing', endpoint: '/movie/now_playing' },
-    { name: 'Upcoming Movies', endpoint: '/movie/upcoming' }
-]
-
-const seriesOptions = [
-    { name: 'Popular Series', endpoint: '/tv/popular' },
-    { name: 'Top Rated Series', endpoint: '/tv/top_rated' },
-    { name: 'Airing Today', endpoint: '/tv/airing_today' },
-    { name: 'On The Air', endpoint: '/tv/on_the_air' }
-]
-
-async function loadHomePage() {
-    await loadHero()
-
-    const trending = randomPick(trendingOptions)
-    const movies = randomPick(moviesOptions)
-    const series = randomPick(seriesOptions)
-
-    const [trendingResults, moviesResults, seriesResults, topRated] = await Promise.all([
-        fetchTMDB(trending.endpoint, randomPage()),
-        fetchTMDB(movies.endpoint, randomPage()),
-        fetchTMDB(series.endpoint, randomPage()),
-        fetchTMDB('/movie/top_rated', randomPage())
-    ])
-
-    const shapedTrending = trendingResults.map(shapeItem)
-    const shapedMovies = moviesResults.map(shapeItem)
-    const shapedSeries = seriesResults.map(shapeItem)
-    const shapedTopRated = topRated.map(shapeItem)
-
-    allItems = [...shapedTrending, ...shapedMovies, ...shapedSeries, ...shapedTopRated]
-
-    renderCategory(trending.name, shapedTrending)
-    renderCategory(movies.name, shapedMovies)
-    renderCategory(series.name, shapedSeries)
-    renderCategory('Top Rated', shapedTopRated)
+async function fetchTMDB(endpoint, page = 1) {
+    const res = await fetch(`${baseUrl}${endpoint}?api_key=${apiKey}&language=en-US&page=${page}`)
+    const data = await res.json()
+    return data.results
 }
 
-async function fetchTMDB(endpoint, page = 1) {
+async function fetchGenres() {
+    const endpoint = pageType === 'movie' ? '/genre/movie/list' : '/genre/tv/list'
     const resolution = await fetch(`${baseUrl}${endpoint}?api_key=${apiKey}&language=en-US`)
+    const data = await resolution.json()
+    return data.genres
+}
+
+async function fetchByGenre(genreId) {
+    const endpoint = pageType === 'movie' ? '/discover/movie' : '/discover/tv'
+    const resolution = await fetch(`${baseUrl}${endpoint}?api_key=${apiKey}&language=en-US&with_genres=${genreId}&page=${randomPage()}`)
     const data = await resolution.json()
     return data.results
 }
@@ -85,8 +52,36 @@ async function fetchTrailer(item) {
     return trailer ? trailer.key : null
 }
 
+async function loadBrowsePage() {
+    await loadHero()
+    const genres = await fetchGenres()
+
+    for (const genre of genres) {
+        const results = await fetchByGenre(genre.id)
+        if (results.length > 0) {
+            const shaped = results.map(shapeItem)
+            allItems = [...allItems, ...shaped]
+            renderCategory(genre.name, results.map(shapeItem))
+        }
+    }
+}
+
+function shapeItem(item) {
+    const isTV = item.media_type === 'tv' || (item.media_type === undefined && item.name !== undefined)
+    return {
+        id: item.id,
+        isTV: isTV,
+        title: isTV ? item.name : item.title,
+        image: item.poster_path ? imageBase + item.poster_path : '',
+        year: (item.release_date || item.first_air_date || '').slice(0, 4),
+        rating: item.vote_average?.toFixed(1) || 'N/A',
+        description: item.overview || ''
+    }
+}
+
 async function loadHero() {
-    const results = await fetchTMDB('/trending/all/day')
+    const endpoint = pageType === 'movie' ? '/trending/movie/day' : '/trending/tv/day'
+    const results = await fetchTMDB(endpoint)
     const item = results[Math.floor(Math.random() * results.length)]
     const shaped = shapeItem(item)
 
@@ -142,85 +137,36 @@ async function loadHero() {
     }
 }
 
-async function loadEpisodes(item, seasonNumber) {
-    const res = await fetch(`${baseUrl}/tv/${item.id}/season/${seasonNumber}?api_key=${apiKey}`)
-    const data = await res.json()
-
-    const episodesList = document.querySelector('.episodes-list')
-    episodesList.innerHTML = ''
-
-    data.episodes.forEach(episode => {
-        const episodeItem = document.createElement('div')
-        episodeItem.classList.add('episode-item')
-
-        episodeItem.innerHTML = `
-            <img class="episode-thumbnail" src="${episode.still_path ? imageBase + episode.still_path : ''}" alt="${episode.name}">
-            <div class="episode-info">
-                <div class="episode-number">Episode ${episode.episode_number}</div>
-                <div class="episode-name">${episode.name}</div>
-                <div class="episode-overview">${episode.overview}</div>
-            </div>
-        `
-
-        episodesList.appendChild(episodeItem)
-    })
-}
-
-
-function shapeItem(item) {
-    const isTV = item.media_type === 'tv' || (item.media_type === undefined && item.name !== undefined)
-    return {
-        id: item.id,
-        isTV: isTV,
-        title: isTV ? item.name : item.title,
-        image: item.poster_path ? imageBase + item.poster_path : '',
-        year: (item.release_date || item.first_air_date || '').slice(0, 4),
-        rating: item.vote_average?.toFixed(1) || 'N/A',
-        description: item.overview || ''
-    }
-}
-
 function renderCategory(name, items) {
-
     const categoryElement = document.createElement('div')
     categoryElement.classList.add('category')
 
     categoryElement.innerHTML = `
-            <h2 class="category-title">${name}</h2>
-            <div class="movie-container">
-                <button class="left-button">
-                    <span class="material-symbols-outlined">
-                        arrow_back_ios_new
-                    </span>
-                </button>
-                    <div class="movie-row">
-                        
-                    </div>
-                <button class="right-button">
-                    <span class="material-symbols-outlined">
-                        arrow_forward_ios
-                    </span>
-                </button>
-            </div>
+        <h2 class="category-title">${name}</h2>
+        <div class="movie-container">
+            <button class="left-button">
+                <span class="material-symbols-outlined">arrow_back_ios_new</span>
+            </button>
+            <div class="movie-row"></div>
+            <button class="right-button">
+                <span class="material-symbols-outlined">arrow_forward_ios</span>
+            </button>
+        </div>
     `
 
     const movieRow = categoryElement.querySelector('.movie-row')
 
     items.forEach(item => {
-        const image = document.createElement('img')
-
-        image.src = item.image
-        image.alt = item.title
-
-        movieRow.appendChild(image)
-
-        image.addEventListener('click', () => openMovieModal(item))
+        const img = document.createElement('img')
+        img.src = item.image
+        img.alt = item.title
+        img.addEventListener('click', () => openMovieModal(item))
+        movieRow.appendChild(img)
     })
 
     categoryElement.querySelector('.left-button').addEventListener('click', () => {
         movieRow.scrollLeft -= 1000
     })
-
     categoryElement.querySelector('.right-button').addEventListener('click', () => {
         movieRow.scrollLeft += 1000
     })
@@ -253,17 +199,10 @@ searchButton.addEventListener('click', () => {
     searchBar.focus()
 })
 
-closeModal.addEventListener('click', () => {
-    modalOverlay.classList.remove('show')
-    document.querySelector('.image-container').innerHTML = `<img class="modal-image" src="" alt="">`
-})
-
-
 document.addEventListener('click', (event) => {
     if (!searchContainer.contains(event.target)) {
-        searchBar.classList.remove('show');
-        searchContainer.classList.remove('show');
-
+        searchBar.classList.remove('show')
+        searchContainer.classList.remove('show')
         searchSuggestions.innerHTML = ''
         categoriesContainer.classList.remove('searching')
     }
@@ -271,7 +210,6 @@ document.addEventListener('click', (event) => {
 
 searchBar.addEventListener('input', () => {
     const searchTerm = searchBar.value.toLowerCase().trim()
-
     searchSuggestions.innerHTML = ''
 
     if (searchTerm === '') {
@@ -290,6 +228,11 @@ searchBar.addEventListener('input', () => {
             img.addEventListener('click', () => openMovieModal(item))
             searchSuggestions.appendChild(img)
         })
+})
+
+closeModal.addEventListener('click', () => {
+    modalOverlay.classList.remove('show')
+    document.querySelector('.image-container').innerHTML = `<img class="modal-image" src="" alt="">`
 })
 
 document.querySelector('.play-button').addEventListener('click', async () => {
@@ -312,6 +255,29 @@ document.querySelector('.play-button').addEventListener('click', async () => {
     }
 })
 
+async function loadEpisodes(item, seasonNumber) {
+    const res = await fetch(`${baseUrl}/tv/${item.id}/season/${seasonNumber}?api_key=${apiKey}`)
+    const data = await res.json()
+
+    const episodesList = document.querySelector('.episodes-list')
+    episodesList.innerHTML = ''
+
+    data.episodes.forEach(episode => {
+        const episodeItem = document.createElement('div')
+        episodeItem.classList.add('episode-item')
+
+        episodeItem.innerHTML = `
+            <img class="episode-thumbnail" src="${episode.still_path ? imageBase + episode.still_path : ''}" alt="${episode.name}">
+            <div class="episode-info">
+                <div class="episode-number">Episode ${episode.episode_number}</div>
+                <div class="episode-name">${episode.name}</div>
+                <div class="episode-overview">${episode.overview}</div>
+            </div>
+        `
+
+        episodesList.appendChild(episodeItem)
+    })
+}
 
 async function openMovieModal(item) {
     currentItem = item
@@ -364,12 +330,8 @@ async function openMovieModal(item) {
     }
 }
 
-loadHomePage()
-
 function randomPage() {
     return Math.floor(Math.random() * 5) + 1
 }
 
-function randomPick(arr) {
-    return arr[Math.floor(Math.random() * arr.length)]
-}
+loadBrowsePage()

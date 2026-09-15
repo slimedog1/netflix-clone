@@ -18,8 +18,8 @@
                     <img class="netflix-logo" src="assets/netlix-logo.jpg">
                 </a>
                 <a href="index.html" class="browse-button">Home</a>
-                <a href="browse.html" class="browse-button">Movies</a>
-                <a href="browse.html" class="browse-button">Series</a>
+                <a href="browse.html?type=movie" class="browse-button">Movies</a>
+                <a href="browse.html?type=series" class="browse-button">Series</a>
                 <a href="index.html" class="browse-button">My List</a>
             </div>
 
@@ -43,7 +43,7 @@
 
         <div class="ms-container">
             <div class="ms-txt">
-                <span>Series</span>
+                <span id="page-txt">Movies</span>
                 <select class="select-genre">
                 <option class="genre-txt" value="">Genres</option>
                 </select>
@@ -63,12 +63,13 @@
                     <img class="modal-image" src="" alt="">
                 </div>
                 <div class="modal-content">
-                    <h3 class="modal-title"></h3>
+                    <h2 class="modal-title"></h2>
 
                     <div class="movie-info">
                         <div class="movie-year"></div>
                         <div class="movie-genre"></div>
                         <div class="movie-rating"></div>
+                        <div class="movie-cast"></div>
                     </div>
 
                     <p class="modal-description"></p>
@@ -78,12 +79,19 @@
                             play_arrow
                         </span>
                     </button>
+                    <div class="episodes-container">
+                        <div class="episodes-header">
+                            <h3 class="episodes-title">Episodes</h3>
+                            <select class="season-select"></select>
+                        </div>
+                        <div class="episodes-list"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <script src="main.js"></script>
+    <script src="browse.js"></script>
 </body>
 </html>
